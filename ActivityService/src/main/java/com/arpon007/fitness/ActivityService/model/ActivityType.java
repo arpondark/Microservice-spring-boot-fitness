@@ -1,4 +1,14 @@
 package com.arpon007.fitness.ActivityService.model;
 
-public class ActivityType {
+public enum ActivityType {
+    RUNNING,
+    WALKING,
+    CYCLING,
+    SWIMMING,
+    WEIGHT_TRAINING,
+    YOGA,
+    HIIT,
+    CARDIO,
+    STRETCHING,
+    OTHER
 }
