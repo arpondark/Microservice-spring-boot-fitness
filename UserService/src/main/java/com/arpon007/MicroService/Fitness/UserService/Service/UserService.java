@@ -1,6 +1,7 @@
 package com.arpon007.MicroService.Fitness.UserService.Service;
 
 import com.arpon007.MicroService.Fitness.UserService.models.UserRole;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import com.arpon007.MicroService.Fitness.UserService.Repo.UserRepo;
@@ -9,6 +10,7 @@ import com.arpon007.MicroService.Fitness.UserService.dto.UserResponse;
 import com.arpon007.MicroService.Fitness.UserService.models.User;
 
 @Service
+@Slf4j
 public class UserService {
     private final UserRepo userRepo;
     // constructor injection to initialize final repository
@@ -59,8 +61,11 @@ public class UserService {
         return userResponse;
     }
 
-//    public Boolean existByUserId(String userId) {
-//      //  log.info("Calling User Validation API for userId: {}", userId);
+
+
+    public Boolean existByUserId(String userId) {
+       log.info("Calling User Validation API for userId: {}", userId);
+        return userRepo.existsById(userId);
 //        return userRepo.existsByKeycloakId(userId);
-//    }
+    }
 }
