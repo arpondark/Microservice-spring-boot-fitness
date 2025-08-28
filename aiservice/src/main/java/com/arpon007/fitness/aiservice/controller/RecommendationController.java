@@ -17,13 +17,13 @@ import java.util.List;
 public class RecommendationController {
     private final RecommentationService recommendationService;
 
-    @GetMapping("/user/{userId")
+    @GetMapping("/user/{userId}")
     public ResponseEntity<List<Recommendation>> getUerRecommendations(@PathVariable String userId) {
         return ResponseEntity.ok(recommendationService.getUerRecommendations(userId));
 
     }
 
-    @GetMapping("/activity/{activityId")
+    @GetMapping("/activity/{activityId}")
     public ResponseEntity<List<Recommendation>> getActivityRecommendation(@PathVariable String activityId) {
         return ResponseEntity.ok(recommendationService.getActivityRecommendation(activityId));
     }
