@@ -1,11 +1,11 @@
 package com.arpon007.fitness.ActivityService.service;
 
-import lombok.RequiredArgsConstructor;
-
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +24,7 @@ public class UserValidationService {
                     .bodyToMono(Boolean.class)
                     .block();
         } catch (WebClientResponseException e) {
-            e.printStackTrace();
+            log.error("Error validating user {}: {}", userId, e.getMessage());
         }
         return false;
     }

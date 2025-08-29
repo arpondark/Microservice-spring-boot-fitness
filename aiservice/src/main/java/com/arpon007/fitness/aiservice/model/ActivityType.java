@@ -1,4 +1,4 @@
-package com.arpon007.fitness.ActivityService.model;
+package com.arpon007.fitness.aiservice.model;
 
 public enum ActivityType {
     RUNNING,

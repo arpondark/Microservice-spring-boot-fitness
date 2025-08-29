@@ -6,6 +6,11 @@ spring:
       uri: mongodb://localhost:27017/aiactivityrecommendation
       database: aiactivityrecommendation
 
+kafka:
+  bootstrap-servers: localhost:9092
+  topic:
+    name: activity-events
+
 server:
   port: 8083
 
@@ -13,3 +18,4 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
+
