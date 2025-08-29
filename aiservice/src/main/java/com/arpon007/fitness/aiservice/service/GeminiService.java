@@ -1,16 +1,13 @@
 package com.arpon007.fitness.aiservice.service;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @Service
-@RequiredArgsConstructor
-public class GemoniService {
+public class GeminiService {
     private final WebClient webClient;
 
     @Value("${gemini.api.url}")
@@ -31,15 +28,12 @@ public class GemoniService {
                 }
         );
 
-        String response = webClient.post()
-                .uri(geminiApiUrl + geminiApiKey)
+        return webClient.post()
+                .uri(geminiApiUrl + ":generateContent?key=" + geminiApiKey)
                 .header("Content-Type", "application/json")
                 .bodyValue(requestBody)
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
-
-        return response;
-
-
     }
+}
