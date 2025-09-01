@@ -15,8 +15,8 @@ import org.springframework.kafka.support.serializer.JsonDeserializer;
 import com.arpon007.fitness.aiservice.model.Activity;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@Configuration
-@EnableKafka
+//@Configuration
+//@EnableKafka
 public class KafkaConfig {
 
     @Value("${kafka.bootstrap-servers}")
