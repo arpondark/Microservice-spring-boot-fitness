@@ -29,7 +29,7 @@ public class GeminiService {
         );
 
         return webClient.post()
-                .uri(geminiApiUrl + ":generateContent?key=" + geminiApiKey)
+                .uri(geminiApiUrl + "?key=" + geminiApiKey)
                 .header("Content-Type", "application/json")
                 .bodyValue(requestBody)
                 .retrieve()
