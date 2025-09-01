@@ -20,8 +20,9 @@ spring:
           uri: lb://AI-SERVICE
           predicates:
             - Path=/api/recommendations/**
- server:
-    port: 8080
+
+server:
+  port: 8080
 
 eureka:
   client:
