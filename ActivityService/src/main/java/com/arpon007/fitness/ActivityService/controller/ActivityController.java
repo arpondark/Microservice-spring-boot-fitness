@@ -1,4 +1,4 @@
-package com.arpon007.fitness.ActivityService.conterller;
+package com.arpon007.fitness.ActivityService.controller;
 import com.arpon007.fitness.ActivityService.dto.ActivityRequest;
 import com.arpon007.fitness.ActivityService.dto.ActivityResponse;
 import com.arpon007.fitness.ActivityService.model.Activity;
