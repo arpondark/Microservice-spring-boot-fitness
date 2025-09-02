@@ -1,4 +1,4 @@
-package com.arpon007.fitness.ActivityService.config;
+package com.arpon007.fitness.gateway.user;
 
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
@@ -10,12 +10,14 @@ public class WebClientConfig {
 
     @Bean
     @LoadBalanced
-    public WebClient.Builder loadBalancedWebClientBuilder() {
+    public WebClient.Builder webClientBuilder() {
         return WebClient.builder();
     }
 
     @Bean
-    public WebClient webClient(@LoadBalanced WebClient.Builder webClientBuilder) {
-        return webClientBuilder.build();
+    public WebClient userServiceWebClient(WebClient.Builder webClientBuilder) {
+        return webClientBuilder
+                .baseUrl("http://USER-SERVICE")
+                .build();
     }
 }

@@ -1,14 +1,15 @@
 package com.arpon007.MicroService.Fitness.UserService.Service;
 
-import com.arpon007.MicroService.Fitness.UserService.models.UserRole;
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import com.arpon007.MicroService.Fitness.UserService.Repo.UserRepo;
 import com.arpon007.MicroService.Fitness.UserService.dto.RegisterRequest;
 import com.arpon007.MicroService.Fitness.UserService.dto.UserResponse;
 import com.arpon007.MicroService.Fitness.UserService.models.User;
+import com.arpon007.MicroService.Fitness.UserService.models.UserRole;
+
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @AllArgsConstructor
@@ -21,6 +22,7 @@ public class UserService {
             User existingUser = userRepo.findByEmail(request.getEmail());
             UserResponse userResponse = new UserResponse();
             userResponse.setId(existingUser.getId());
+            userResponse.setKeyloakId(existingUser.getKeyloakId());
             userResponse.setPassword(existingUser.getPassword());
             userResponse.setEmail(existingUser.getEmail());
             userResponse.setFirstName(existingUser.getFirstName());
@@ -33,6 +35,7 @@ public class UserService {
         user.setEmail(request.getEmail());
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
+        user.setKeyloakId(request.getKeyloakId());
         // set password from the request (consider encoding in real apps)
         user.setPassword(request.getPassword());
         // explicitly set role to ensure it's persisted
@@ -43,6 +46,7 @@ public class UserService {
         userResponse.setId(savedUser.getId());
         userResponse.setPassword(savedUser.getPassword());
         userResponse.setEmail(savedUser.getEmail());
+        userResponse.setKeyloakId(savedUser.getKeyloakId());
         userResponse.setFirstName(savedUser.getFirstName());
         userResponse.setLastName(savedUser.getLastName());
         userResponse.setCreatedAt(savedUser.getCreatedAt());
@@ -58,6 +62,7 @@ public class UserService {
 
         UserResponse userResponse = new UserResponse();
         userResponse.setId(user.getId());
+        userResponse.setKeyloakId(user.getKeyloakId());
         userResponse.setPassword(user.getPassword());
         userResponse.setEmail(user.getEmail());
         userResponse.setFirstName(user.getFirstName());

@@ -1,4 +1,4 @@
-package com.arpon007.MicroService.Fitness.UserService.dto;
+package com.arpon007.fitness.gateway.user;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -13,6 +13,7 @@ public class RegisterRequest {
     @NotBlank(message = "Password is required")
     @Size(min = 6, message = "Password must be at least 6 characters long")
     private String password;
+    private String keyloakId;
     private String firstName;
     private String lastName;
 
