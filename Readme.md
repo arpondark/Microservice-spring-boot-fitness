@@ -1,43 +1,179 @@
-# Fitness Microservices Application
 
-A comprehensive fitness tracking and recommendation system built with Spring Boot microservices architecture. This application provides activity tracking, user management, and AI-powered fitness recommendations through a distributed microservices ecosystem.
+# Microservice Spring Boot Fitness Application
 
-## 🏗️ Architecture Overview
+GitHub Repository: [https://github.com/arpondark/Microservice-spring-boot-fitness](https://github.com/arpondark/Microservice-spring-boot-fitness)
 
-This project consists of four main microservices:
+## Overview
 
-### **Services**
+This project is a distributed fitness tracking and recommendation system built using Spring Boot microservices. It includes user management, activity tracking, and AI-powered recommendations, all orchestrated via service discovery and an API gateway.
 
-1. **Eureka Server** (Port: 8761)
-   - Service Discovery and Registration
-   - Enables dynamic service discovery for all microservices
+## Architecture & Technologies
 
-2. **User Service** (Port: 8081)
-   - User management and authentication
-   - PostgreSQL database for user data persistence
-   - RESTful API for user operations
+| Microservice      | Port  | Main Tech           | Database   | Messaging | Purpose/Features                  |
+|-------------------|-------|---------------------|------------|-----------|-----------------------------------|
+| Eureka Server     | 8761  | Spring Cloud Eureka | -          | -         | Service discovery & registration  |
+| Config Server     | 8888  | Spring Cloud Config | -          | -         | Centralized config management     |
+| API Gateway       | 8080  | Spring Cloud Gateway| -          | -         | Routing, security, aggregation    |
+| User Service      | 8081  | Spring Boot, JPA    | PostgreSQL | -         | User CRUD, validation, auth       |
+| Activity Service  | 8082  | Spring Boot, Kafka  | MongoDB    | Kafka     | Activity logging, event producer  |
+| AI Service        | 8083  | Spring Boot, Kafka  | MongoDB    | Kafka     | Recommendations, event consumer   |
 
-3. **Activity Service** (Port: 8082)
-   - Activity tracking and logging
-   - MongoDB for flexible activity data storage
-   - Kafka integration for event-driven architecture
-   - Tracks various fitness activities with metrics
+### Technology Stack
 
-4. **AI Service** (Port: 8083)
-   - AI-powered fitness recommendations
-   - MongoDB for recommendation data
-   - Processes activity data to provide personalized suggestions
-   - Kafka consumer for activity events
+- Java 21
+- Spring Boot 3.5.5
+- Spring Cloud 2025.0.0
+- Spring Data JPA (User Service)
+- Spring Data MongoDB (Activity & AI Service)
+- Apache Kafka (Activity/AI event streaming)
+- PostgreSQL (User Service)
+- MongoDB (Activity & AI Service)
 
-## 🛠️ Technology Stack
+## Endpoints
 
-### **Backend**
+### User Service (`/api/users`)
 
-- **Java 21** - Primary programming language
-- **Spring Boot 3.5.5** - Framework for microservices
-- **Spring Cloud 2025.0.0** - Microservices support
-- **Spring Data JPA** - ORM for relational databases
-- **Spring Data MongoDB** - NoSQL database integration
+| Method | Endpoint                | Description                | Request Body         | Response         |
+|--------|------------------------|----------------------------|----------------------|------------------|
+| GET    | /api/users/{userId}    | Get user profile           | -                    | UserResponse     |
+| POST   | /api/users/register    | Register new user          | RegisterRequest      | UserResponse     |
+| GET    | /api/users/{userId}/validate | Validate user existence | -                    | Boolean          |
+
+### Activity Service (`/api/activities`)
+
+| Method | Endpoint           | Description           | Request Body      | Response           |
+|--------|-------------------|-----------------------|-------------------|--------------------|
+| POST   | /api/activities   | Log activity          | ActivityRequest   | ActivityResponse   |
+
+### AI Service (`/api/recommendations`)
+
+| Method | Endpoint                        | Description                        | Request Body | Response                |
+|--------|----------------------------------|------------------------------------|--------------|-------------------------|
+| GET    | /api/recommendations/user/{userId}     | Get recommendations for user      | -            | List<Recommendation>    |
+| GET    | /api/recommendations/activity/{activityId} | Get recommendations for activity | -            | List<Recommendation>    |
+
+### Gateway Service
+
+Routes requests to the above services based on path. Secured with OAuth2 JWT (Keycloak recommended).
+
+## How It Works
+
+1. **User Service**: Handles user registration, profile retrieval, and validation. Data is stored in PostgreSQL.
+2. **Activity Service**: Receives activity logs, stores them in MongoDB, and publishes events to Kafka.
+3. **AI Service**: Listens to Kafka events, processes activity data, and provides recommendations via REST endpoints.
+4. **Gateway**: Central entry point, routes requests to appropriate microservices, handles security.
+5. **Eureka**: All services register with Eureka for dynamic discovery.
+6. **Config Server**: Manages configuration for all services centrally.
+
+## Postman Test Collection
+
+You can use the following Postman collection JSON to test all endpoints. Import this into Postman:
+
+```json
+{
+   "info": {
+      "name": "Fitness Microservices API",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+   },
+   "item": [
+      {
+         "name": "Register User",
+         "request": {
+            "method": "POST",
+            "header": [
+               { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+               "mode": "raw",
+               "raw": "{\n  \"userId\": \"user123\",\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password\"\n}"
+            },
+            "url": {
+               "raw": "http://localhost:8081/api/users/register",
+               "protocol": "http",
+               "host": ["localhost"],
+               "port": "8081",
+               "path": ["api", "users", "register"]
+            }
+         }
+      },
+      {
+         "name": "Get User Profile",
+         "request": {
+            "method": "GET",
+            "url": {
+               "raw": "http://localhost:8081/api/users/user123",
+               "protocol": "http",
+               "host": ["localhost"],
+               "port": "8081",
+               "path": ["api", "users", "user123"]
+            }
+         }
+      },
+      {
+         "name": "Validate User",
+         "request": {
+            "method": "GET",
+            "url": {
+               "raw": "http://localhost:8081/api/users/user123/validate",
+               "protocol": "http",
+               "host": ["localhost"],
+               "port": "8081",
+               "path": ["api", "users", "user123", "validate"]
+            }
+         }
+      },
+      {
+         "name": "Log Activity",
+         "request": {
+            "method": "POST",
+            "header": [
+               { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+               "mode": "raw",
+               "raw": "{\n  \"userId\": \"user123\",\n  \"type\": \"Running\",\n  \"duration\": 30,\n  \"calories\": 250\n}"
+            },
+            "url": {
+               "raw": "http://localhost:8082/api/activities",
+               "protocol": "http",
+               "host": ["localhost"],
+               "port": "8082",
+               "path": ["api", "activities"]
+            }
+         }
+      },
+      {
+         "name": "Get User Recommendations",
+         "request": {
+            "method": "GET",
+            "url": {
+               "raw": "http://localhost:8083/api/recommendations/user/user123",
+               "protocol": "http",
+               "host": ["localhost"],
+               "port": "8083",
+               "path": ["api", "recommendations", "user", "user123"]
+            }
+         }
+      },
+      {
+         "name": "Get Activity Recommendations",
+         "request": {
+            "method": "GET",
+            "url": {
+               "raw": "http://localhost:8083/api/recommendations/activity/1",
+               "protocol": "http",
+               "host": ["localhost"],
+               "port": "8083",
+               "path": ["api", "recommendations", "activity", "1"]
+            }
+         }
+      }
+   ]
+}
+```
+
+---
+For more details, see the [GitHub repository](https://github.com/arpondark/Microservice-spring-boot-fitness).
 - **Spring Kafka** - Event streaming
 - **Netflix Eureka** - Service discovery
 
