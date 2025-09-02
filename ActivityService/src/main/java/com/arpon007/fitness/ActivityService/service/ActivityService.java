@@ -1,15 +1,19 @@
 package com.arpon007.fitness.ActivityService.service;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
 import com.arpon007.fitness.ActivityService.dto.ActivityRequest;
 import com.arpon007.fitness.ActivityService.dto.ActivityResponse;
 import com.arpon007.fitness.ActivityService.model.Activity;
 import com.arpon007.fitness.ActivityService.repo.ActivityRepo;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
-import org.springframework.http.HttpStatus;
 
 @Service
 @RequiredArgsConstructor
@@ -43,6 +47,13 @@ public class ActivityService {
         }
 
         return mapToResponse(savedActivity);
+    }
+
+    public List<ActivityResponse> getActivitiesByUser(String userId) {
+        List<Activity> activities = activityRepo.findByUserId(userId);
+        return activities.stream()
+                .map(this::mapToResponse)
+                .collect(java.util.stream.Collectors.toList());
     }
 
     private ActivityResponse mapToResponse(Activity activity) {
