@@ -56,6 +56,51 @@ This project is a distributed fitness tracking and recommendation system built u
 
 Routes requests to the above services based on path. Secured with OAuth2 JWT (Keycloak recommended).
 
+## ⚠️ Important Notes
+
+### User ID Requirements
+
+**When creating activities, you must use the `keycloakId` as the `userId`, not the database ID.**
+
+- **User validation endpoint** (`/api/users/{userId}/validate`) checks against the `keycloakId` field
+- **Activity creation** requires a valid `keycloakId` that exists in the User Service
+- **Database ID vs KeycloakId**: Each user has both a database `id` and a `keycloakId` - only the `keycloakId` works for validation
+
+**Example:**
+```bash
+# ✅ Correct - Using keycloakId
+curl -X POST http://localhost:8082/api/activities \
+  -H "Content-Type: application/json" \
+  -d '{
+    "userId": "e2fec22c-d878-4b8b-bd43-69adffd01e31",  # This is the keycloakId
+    "type": "CYCLING",
+    "duration": 104,
+    "caloriesBurned": 200,
+    "startTime": "2025-07-10T10:00:00",
+    "additionalMetrics": {
+        "distance": 9,
+        "location": "uganda Park"
+    }
+}'
+
+# ❌ Incorrect - Using database ID (will fail validation)
+curl -X POST http://localhost:8082/api/activities \
+  -H "Content-Type: application/json" \
+  -d '{
+    "userId": "3d43c668-27f9-4d6b-b4b7-ee617b1b02b6",  # This is the database id
+    "type": "CYCLING",
+    ...
+}'
+```
+
+To find the correct `keycloakId` for a user:
+```bash
+# Get user details to find their keycloakId
+curl -X GET http://localhost:8081/api/users/{databaseId}
+# Response: {"id":"3d43c668...","keycloakId":"e2fec22c...","email":"..."}
+# Use the keycloakId value for activity creation
+```
+
 ## How It Works
 
 1. **User Service**: Handles user registration, profile retrieval, and validation. Data is stored in PostgreSQL.
@@ -131,7 +176,7 @@ You can use the following Postman collection JSON to test all endpoints. Import 
             ],
             "body": {
                "mode": "raw",
-               "raw": "{\n  \"userId\": \"user123\",\n  \"type\": \"Running\",\n  \"duration\": 30,\n  \"calories\": 250\n}"
+               "raw": "{\n  \"userId\": \"e2fec22c-d878-4b8b-bd43-69adffd01e31\",\n  \"type\": \"CYCLING\",\n  \"duration\": 104,\n  \"caloriesBurned\": 200,\n  \"startTime\": \"2025-07-10T10:00:00\",\n  \"additionalMetrics\": {\n    \"distance\": 9,\n    \"location\": \"uganda Park\"\n  }\n}"
             },
             "url": {
                "raw": "http://localhost:8082/api/activities",
