@@ -529,7 +529,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 👥 Authors
 
-- **Arpon Das** - *Initial work* - [arpondark](https://github.com/arpondark)
+- **MD SHAZAN MAHMUD ARPON** - *Initial work* - [arpondark](https://github.com/arpondark)
 
 ## 🙏 Acknowledgments
 
