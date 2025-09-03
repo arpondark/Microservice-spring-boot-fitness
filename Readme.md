@@ -1,8 +1,6 @@
 
 # Microservice Spring Boot Fitness Application
 
-GitHub Repository: [https://github.com/arpondark/Microservice-spring-boot-fitness](https://github.com/arpondark/Microservice-spring-boot-fitness)
-
 ## Overview
 
 This project is a distributed fitness tracking and recommendation system built using Spring Boot microservices. It includes user management, activity tracking, and AI-powered recommendations, all orchestrated via service discovery and an API gateway.
