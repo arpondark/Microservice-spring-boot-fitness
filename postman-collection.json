@@ -1,0 +1,456 @@
+{
+  "info": {
+    "name": "Fitness Microservices API - Gateway",
+    "description": "Complete API collection for testing the Fitness Microservices platform through the API Gateway",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string",
+      "description": "API Gateway base URL"
+    },
+    {
+      "key": "userId",
+      "value": "user123",
+      "type": "string",
+      "description": "Test user ID"
+    },
+    {
+      "key": "keycloakId",
+      "value": "e2fec22c-d878-4b8b-bd43-69adffd01e31",
+      "type": "string",
+      "description": "Keycloak user ID for activity creation"
+    },
+    {
+      "key": "activityId",
+      "value": "1",
+      "type": "string",
+      "description": "Test activity ID"
+    }
+  ],
+  "item": [
+    {
+      "name": "🏥 Health Check",
+      "item": [
+        {
+          "name": "Eureka Dashboard",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8761",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8761"
+            },
+            "description": "Check Eureka service discovery dashboard"
+          }
+        },
+        {
+          "name": "API Gateway Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/actuator/health",
+              "protocol": "http",
+              "host": ["{{baseUrl}}"],
+              "path": ["actuator", "health"]
+            },
+            "description": "Check API Gateway health status"
+          }
+        }
+      ]
+    },
+    {
+      "name": "👤 User Management",
+      "item": [
+        {
+          "name": "Register New User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"{{userId}}\",\n  \"name\": \"John Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"securePassword123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/register",
+              "protocol": "http",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "register"]
+            },
+            "description": "Register a new user in the system"
+          }
+        },
+        {
+          "name": "Get User Profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/{{userId}}",
+              "protocol": "http",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "{{userId}}"]
+            },
+            "description": "Retrieve user profile information"
+          }
+        },
+        {
+          "name": "Validate User Existence",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/{{userId}}/validate",
+              "protocol": "http",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "{{userId}}", "validate"]
+            },
+            "description": "Check if a user exists in the system"
+          }
+        },
+        {
+          "name": "Get User by Keycloak ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/keycloak/{{keycloakId}}",
+              "protocol": "http",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "keycloak", "{{keycloakId}}"]
+            },
+            "description": "Get user by Keycloak ID (useful for finding the correct ID for activities)"
+          }
+        }
+      ]
+    },
+    {
+      "name": "🏃‍♂️ Activity Tracking",
+      "item": [
+        {
+          "name": "Log Running Activity",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"{{keycloakId}}\",\n  \"type\": \"RUNNING\",\n  \"duration\": 45,\n  \"caloriesBurned\": 350,\n  \"startTime\": \"2025-01-10T08:00:00\",\n  \"additionalMetrics\": {\n    \"distance\": 5.2,\n    \"pace\": \"8:39\",\n    \"location\": \"Central Park\",\n    \"weather\": \"Sunny\",\n    \"temperature\": 22\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/activities",
+              "protocol": "http",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "activities"]
+            },
+            "description": "Log a running activity with detailed metrics"
+          }
+        },
+        {
+          "name": "Log Cycling Activity",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"{{keycloakId}}\",\n  \"type\": \"CYCLING\",\n  \"duration\": 90,\n  \"caloriesBurned\": 450,\n  \"startTime\": \"2025-01-10T14:30:00\",\n  \"additionalMetrics\": {\n    \"distance\": 25.5,\n    \"averageSpeed\": 17.0,\n    \"location\": \"Riverside Trail\",\n    \"bikeType\": \"Road Bike\",\n    \"elevationGain\": 150\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/activities",
+              "protocol": "http",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "activities"]
+            },
+            "description": "Log a cycling activity with cycling-specific metrics"
+          }
+        },
+        {
+          "name": "Log Walking Activity",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"{{keycloakId}}\",\n  \"type\": \"WALKING\",\n  \"duration\": 30,\n  \"caloriesBurned\": 120,\n  \"startTime\": \"2025-01-10T18:00:00\",\n  \"additionalMetrics\": {\n    \"distance\": 2.1,\n    \"steps\": 2800,\n    \"location\": \"Neighborhood Walk\",\n    \"terrain\": \"Paved Sidewalk\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/activities",
+              "protocol": "http",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "activities"]
+            },
+            "description": "Log a walking activity with step count and distance"
+          }
+        },
+        {
+          "name": "Log Weight Training Activity",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"{{keycloakId}}\",\n  \"type\": \"WEIGHT_TRAINING\",\n  \"duration\": 60,\n  \"caloriesBurned\": 280,\n  \"startTime\": \"2025-01-10T16:00:00\",\n  \"additionalMetrics\": {\n    \"workoutType\": \"Upper Body\",\n    \"exercises\": [\"Bench Press\", \"Pull-ups\", \"Overhead Press\"],\n    \"location\": \"Gym\",\n    \"equipment\": \"Free Weights\",\n    \"sets\": 4\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/activities",
+              "protocol": "http",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "activities"]
+            },
+            "description": "Log a weight training session with exercise details"
+          }
+        },
+        {
+          "name": "Log Yoga Activity",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"{{keycloakId}}\",\n  \"type\": \"YOGA\",\n  \"duration\": 45,\n  \"caloriesBurned\": 150,\n  \"startTime\": \"2025-01-10T07:00:00\",\n  \"additionalMetrics\": {\n    \"yogaType\": \"Vinyasa Flow\",\n    \"difficulty\": \"Intermediate\",\n    \"location\": \"Home Studio\",\n    \"focus\": \"Flexibility\",\n    \"meditation\": true\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/activities",
+              "protocol": "http",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "activities"]
+            },
+            "description": "Log a yoga session with yoga-specific details"
+          }
+        }
+      ]
+    },
+    {
+      "name": "🤖 AI Recommendations",
+      "item": [
+        {
+          "name": "Get User Recommendations",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/recommendations/user/{{userId}}",
+              "protocol": "http",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "recommendations", "user", "{{userId}}"]
+            },
+            "description": "Get personalized recommendations for a specific user"
+          }
+        },
+        {
+          "name": "Get Activity-Specific Recommendations",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/recommendations/activity/{{activityId}}",
+              "protocol": "http",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "recommendations", "activity", "{{activityId}}"]
+            },
+            "description": "Get recommendations based on a specific activity"
+          }
+        },
+        {
+          "name": "Get All Recommendations",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/recommendations",
+              "protocol": "http",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "recommendations"]
+            },
+            "description": "Get all recommendations in the system"
+          }
+        }
+      ]
+    },
+    {
+      "name": "📊 Data Analysis",
+      "item": [
+        {
+          "name": "Get User Activity Summary",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/activities/user/{{userId}}/summary",
+              "protocol": "http",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "activities", "user", "{{userId}}", "summary"]
+            },
+            "description": "Get activity summary statistics for a user"
+          }
+        },
+        {
+          "name": "Get Activity by Type",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/activities/type/RUNNING",
+              "protocol": "http",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "activities", "type", "RUNNING"]
+            },
+            "description": "Get all activities of a specific type"
+          }
+        },
+        {
+          "name": "Get Recent Activities",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/activities/recent?limit=10",
+              "protocol": "http",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "activities", "recent"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Get recent activities with pagination"
+          }
+        }
+      ]
+    },
+    {
+      "name": "🔧 System Management",
+      "item": [
+        {
+          "name": "Get Service Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/actuator/health",
+              "protocol": "http",
+              "host": ["{{baseUrl}}"],
+              "path": ["actuator", "health"]
+            },
+            "description": "Check the health status of all microservices"
+          }
+        },
+        {
+          "name": "Get Service Info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/actuator/info",
+              "protocol": "http",
+              "host": ["{{baseUrl}}"],
+              "path": ["actuator", "info"]
+            },
+            "description": "Get information about the API Gateway service"
+          }
+        },
+        {
+          "name": "Get Metrics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/actuator/metrics",
+              "protocol": "http",
+              "host": ["{{baseUrl}}"],
+              "path": ["actuator", "metrics"]
+            },
+            "description": "Get application metrics"
+          }
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Set default headers for all requests",
+          "pm.request.headers.add({\n    key: 'Accept',\n    value: 'application/json'\n});",
+          "",
+          "// Log request details for debugging",
+          "console.log('Request URL:', pm.request.url.toString());",
+          "console.log('Request Method:', pm.request.method);"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Common test script for all requests",
+          "pm.test('Status code is 200 or 201', function () {",
+          "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+          "});",
+          "",
+          "pm.test('Response time is less than 5000ms', function () {",
+          "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+          "});",
+          "",
+          "pm.test('Response has required headers', function () {",
+          "    pm.response.to.have.header('Content-Type');",
+          "});",
+          "",
+          "// Log response for debugging",
+          "console.log('Response Status:', pm.response.status);",
+          "console.log('Response Time:', pm.response.responseTime + 'ms');",
+          "",
+          "// Parse and log response body if it's JSON",
+          "if (pm.response.headers.get('Content-Type') && pm.response.headers.get('Content-Type').includes('application/json')) {",
+          "    try {",
+          "        const responseBody = pm.response.json();",
+          "        console.log('Response Body:', JSON.stringify(responseBody, null, 2));",
+          "    } catch (e) {",
+          "        console.log('Could not parse response as JSON');",
+          "    }",
+          "}"
+        ]
+      }
+    }
+  ]
+}

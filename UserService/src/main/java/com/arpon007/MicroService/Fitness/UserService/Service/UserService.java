@@ -78,4 +78,21 @@ public class UserService {
         log.info("Calling User Validation API for userId: {}", userId);
         return userRepo.existsByKeyloakId(userId);
     }
+
+    public UserResponse getUserByKeycloakId(String keycloakId) {
+        User user = userRepo.findByKeyloakId(keycloakId)
+                .orElseThrow(() -> new RuntimeException("User Not Found with Keycloak ID: " + keycloakId));
+
+        UserResponse userResponse = new UserResponse();
+        userResponse.setId(user.getId());
+        userResponse.setKeyloakId(user.getKeyloakId());
+        userResponse.setPassword(user.getPassword());
+        userResponse.setEmail(user.getEmail());
+        userResponse.setFirstName(user.getFirstName());
+        userResponse.setLastName(user.getLastName());
+        userResponse.setCreatedAt(user.getCreatedAt());
+        userResponse.setUpdatedAt(user.getUpdatedAt());
+
+        return userResponse;
+    }
 }
