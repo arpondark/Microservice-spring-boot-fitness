@@ -7,8 +7,7 @@
 
 
 > **A modern, scalable fitness tracking platform built with Spring Boot microservices architecture**
-## 📋 Table of Contents
-=======
+
 ## Overview
 
 - [Overview](#overview)
