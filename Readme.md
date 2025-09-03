@@ -1,40 +1,118 @@
-# 🏃‍♂️ Fitness Tracker Microservices Platform
 
-[![Java](https://img.shields.io/badge/Java-24-orange.svg)](https://openjdk.org/projects/jdk/24/)
-[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.5-brightgreen.svg)](https://spring.io/projects/spring-boot)
-[![Spring Cloud](https://img.shields.io/badge/Spring%20Cloud-2025.0.0-blue.svg)](https://spring.io/projects/spring-cloud)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+# Microservice Spring Boot Fitness Application
 
-> **A modern, scalable fitness tracking platform built with Spring Boot microservices architecture**
+GitHub Repository: [https://github.com/arpondark/Microservice-spring-boot-fitness](https://github.com/arpondark/Microservice-spring-boot-fitness)
 
-## 📋 Table of Contents
+## Overview
 
-- [Overview](#overview)
-- [Architecture](#architecture)
-- [Technology Stack](#technology-stack)
-- [Quick Start](#quick-start)
-- [API Documentation](#api-documentation)
-- [Frontend Application](#frontend-application)
-- [Development Guide](#development-guide)
-- [Deployment](#deployment)
-- [Contributing](#contributing)
+This project is a distributed fitness tracking and recommendation system built using Spring Boot microservices. It includes user management, activity tracking, and AI-powered recommendations, all orchestrated via service discovery and an API gateway.
 
-## 🎯 Overview
+## Architecture & Technologies
 
-This project is a comprehensive fitness tracking and recommendation system built using Spring Boot microservices architecture. It provides a scalable, event-driven platform for tracking fitness activities, managing user profiles, and delivering AI-powered personalized recommendations.
+| Microservice      | Port  | Main Tech           | Database   | Messaging | Purpose/Features                  |
+|-------------------|-------|---------------------|------------|-----------|-----------------------------------|
+| Eureka Server     | 8761  | Spring Cloud Eureka | -          | -         | Service discovery & registration  |
+| Config Server     | 8888  | Spring Cloud Config | -          | -         | Centralized config management     |
+| API Gateway       | 8080  | Spring Cloud Gateway| -          | -         | Routing, security, aggregation    |
+| User Service      | 8081  | Spring Boot, JPA    | PostgreSQL | -         | User CRUD, validation, auth       |
+| Activity Service  | 8082  | Spring Boot, Kafka  | MongoDB    | Kafka     | Activity logging, event producer  |
+| AI Service        | 8083  | Spring Boot, Kafka  | MongoDB    | Kafka     | Recommendations, event consumer   |
 
-### ✨ Key Features
+### Technology Stack
 
-- **🔐 Secure Authentication** - OAuth2 JWT with Keycloak integration
-- **📊 Activity Tracking** - Comprehensive workout logging and monitoring
-- **🤖 AI Recommendations** - Smart insights and personalized suggestions
-- **🔄 Event-Driven Architecture** - Real-time data processing with Kafka
-- **🌐 API Gateway** - Centralized routing and security
-- **📱 Responsive Frontend** - Modern React-based user interface
+- Java 21
+- Spring Boot 3.5.5
+- Spring Cloud 2025.0.0
+- Spring Data JPA (User Service)
+- Spring Data MongoDB (Activity & AI Service)
+- Apache Kafka (Activity/AI event streaming)
+- PostgreSQL (User Service)
+- MongoDB (Activity & AI Service)
 
-## 🏗️ Architecture
+## Endpoints
 
-The application follows a microservices architecture pattern with the following components:
+### User Service (`/api/users`)
+
+| Method | Endpoint                | Description                | Request Body         | Response         |
+|--------|------------------------|----------------------------|----------------------|------------------|
+| GET    | /api/users/{userId}    | Get user profile           | -                    | UserResponse     |
+| POST   | /api/users/register    | Register new user          | RegisterRequest      | UserResponse     |
+| GET    | /api/users/{userId}/validate | Validate user existence | -                    | Boolean          |
+
+### Activity Service (`/api/activities`)
+
+| Method | Endpoint           | Description           | Request Body      | Response           |
+|--------|-------------------|-----------------------|-------------------|--------------------|
+| POST   | /api/activities   | Log activity          | ActivityRequest   | ActivityResponse   |
+
+### AI Service (`/api/recommendations`)
+
+| Method | Endpoint                        | Description                        | Request Body | Response                |
+|--------|----------------------------------|------------------------------------|--------------|-------------------------|
+| GET    | /api/recommendations/user/{userId}     | Get recommendations for user      | -            | List<Recommendation>    |
+| GET    | /api/recommendations/activity/{activityId} | Get recommendations for activity | -            | List<Recommendation>    |
+
+### Gateway Service
+
+Routes requests to the above services based on path. Secured with OAuth2 JWT (Keycloak recommended).
+
+## ⚠️ Important Notes
+
+### User ID Requirements
+
+**When creating activities, you must use the `keycloakId` as the `userId`, not the database ID.**
+
+- **User validation endpoint** (`/api/users/{userId}/validate`) checks against the `keycloakId` field
+- **Activity creation** requires a valid `keycloakId` that exists in the User Service
+- **Database ID vs KeycloakId**: Each user has both a database `id` and a `keycloakId` - only the `keycloakId` works for validation
+
+**Example:**
+```bash
+# ✅ Correct - Using keycloakId
+curl -X POST http://localhost:8082/api/activities \
+  -H "Content-Type: application/json" \
+  -d '{
+    "userId": "e2fec22c-d878-4b8b-bd43-69adffd01e31",  # This is the keycloakId
+    "type": "CYCLING",
+    "duration": 104,
+    "caloriesBurned": 200,
+    "startTime": "2025-07-10T10:00:00",
+    "additionalMetrics": {
+        "distance": 9,
+        "location": "uganda Park"
+    }
+}'
+
+# ❌ Incorrect - Using database ID (will fail validation)
+curl -X POST http://localhost:8082/api/activities \
+  -H "Content-Type: application/json" \
+  -d '{
+    "userId": "3d43c668-27f9-4d6b-b4b7-ee617b1b02b6",  # This is the database id
+    "type": "CYCLING",
+    ...
+}'
+```
+
+To find the correct `keycloakId` for a user:
+```bash
+# Get user details to find their keycloakId
+curl -X GET http://localhost:8081/api/users/{databaseId}
+# Response: {"id":"3d43c668...","keycloakId":"e2fec22c...","email":"..."}
+# Use the keycloakId value for activity creation
+```
+
+## How It Works
+
+1. **User Service**: Handles user registration, profile retrieval, and validation. Data is stored in PostgreSQL.
+2. **Activity Service**: Receives activity logs, stores them in MongoDB, and publishes events to Kafka.
+3. **AI Service**: Listens to Kafka events, processes activity data, and provides recommendations via REST endpoints.
+4. **Gateway**: Central entry point, routes requests to appropriate microservices, handles security.
+5. **Eureka**: All services register with Eureka for dynamic discovery.
+6. **Config Server**: Manages configuration for all services centrally.
+
+## Postman Test Collection
+
+You can use the following Postman collection JSON to test all endpoints. Import this into Postman:
 
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
