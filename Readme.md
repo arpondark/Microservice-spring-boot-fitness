@@ -1,7 +1,6 @@
 
 # Microservice Spring Boot Fitness Application
 
-GitHub Repository: [https://github.com/arpondark/Microservice-spring-boot-fitness](https://github.com/arpondark/Microservice-spring-boot-fitness)
 
 ## Overview
 
