@@ -1,4 +1,4 @@
-# 🏃‍♂️ Fitness Tracker Microservices Platform
+#  Fitness Tracker Microservices Platform
 
 [![Java](https://img.shields.io/badge/Java-24-orange.svg)](https://openjdk.org/projects/jdk/24/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.5-brightgreen.svg)](https://spring.io/projects/spring-boot)
@@ -9,7 +9,7 @@
 > **A modern, scalable fitness tracking platform built with Spring Boot microservices architecture**
 
 
-## 🎯 Overview
+##  Overview
 
 This project is a comprehensive fitness tracking and recommendation system built using Spring Boot microservices architecture. It provides a scalable, event-driven platform for tracking fitness activities, managing user profiles, and delivering AI-powered personalized recommendations.
 
@@ -22,7 +22,7 @@ This project is a comprehensive fitness tracking and recommendation system built
 - **API Gateway** - Centralized routing and security
 - **Responsive Frontend** - Modern React-based user interface
 
-## 🏗️ Architecture
+##  Architecture
 
 The application follows a microservices architecture pattern with the following components:
 
@@ -59,7 +59,7 @@ The application follows a microservices architecture pattern with the following 
 | **Activity Service** | 8082 | Spring Boot + Kafka | MongoDB | Activity tracking & event publishing |
 | **AI Service** | 8083 | Spring Boot + Kafka | MongoDB | Recommendations & event processing |
 
-## 🛠️ Technology Stack
+##  Technology Stack
 
 ### Backend Technologies
 - **Java 24** - Latest version with modern features
@@ -84,7 +84,7 @@ The application follows a microservices architecture pattern with the following 
 - **Lombok** - Code generation and boilerplate reduction
 - **Spring Boot Validation** - Input validation
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Prerequisites
 
@@ -185,7 +185,7 @@ cd ../gateway && ./mvnw spring-boot:run
 - **Activity Service**: http://localhost:8082
 - **AI Service**: http://localhost:8083
 
-## 📚 API Documentation
+##  API Documentation
 
 ### Base URL
 All API calls should be made through the **API Gateway** at `http://localhost:8080`
@@ -273,7 +273,7 @@ When creating activities, you must use the `keycloakId` as the `userId`, not the
 
 **Example:**
 ```bash
-# ✅ Correct - Using keycloakId
+#  Correct - Using keycloakId
 curl -X POST http://localhost:8080/api/activities \
   -H "Content-Type: application/json" \
   -d '{
@@ -284,7 +284,7 @@ curl -X POST http://localhost:8080/api/activities \
     "startTime": "2025-01-10T10:00:00"
   }'
 
-# ❌ Incorrect - Using database ID (will fail validation)
+#  Incorrect - Using database ID (will fail validation)
 curl -X POST http://localhost:8080/api/activities \
   -H "Content-Type: application/json" \
   -d '{
@@ -296,7 +296,7 @@ curl -X POST http://localhost:8080/api/activities \
   }'
 ```
 
-## 🖥️ Frontend Application
+##  Frontend Application
 
 This microservices backend is designed to work with a modern React frontend application.
 
@@ -333,7 +333,7 @@ pnpm dev
 
 The frontend will be available at `http://localhost:5173`
 
-## 🔧 Development Guide
+##  Development Guide
 
 ### Project Structure
 ```
@@ -388,7 +388,7 @@ Each service has its own `application.yml` configuration file located in `src/ma
 4. **Recommendation Generation**: AIService generates personalized recommendations
 5. **Data Storage**: Recommendations stored in MongoDB
 
-## 🧪 Testing
+##  Testing
 
 ### Run Tests
 ```bash
@@ -406,7 +406,7 @@ mvn test jacoco:report
 mvn verify -P integration-test
 ```
 
-## 📦 Deployment
+##  Deployment
 
 ### Build All Services
 ```bash
@@ -437,7 +437,7 @@ docker-compose up -d
 - Check individual service logs in `logs/` directory
 - Spring Boot Actuator endpoints available at `/actuator/health`
 
-## 🐛 Troubleshooting
+##  Troubleshooting
 
 ### Common Issues
 
@@ -463,7 +463,7 @@ docker-compose up -d
 mvn spring-boot:run -Dspring-boot.run.arguments="--debug"
 ```
 
-## 🤝 Contributing
+##  Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
@@ -490,15 +490,15 @@ mvn spring-boot:run -Dspring-boot.run.arguments="--debug"
 - Implement proper indexing
 - Handle database migrations carefully
 
-## 📄 License
+##  License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 👥 Authors
+## Authors
 
 - **MD SHAZAN MAHMUD ARPON** - *Initial work* - [arpondark](https://github.com/arpondark)
 
-## 🙏 Acknowledgments
+##  Acknowledgments
 
 - Spring Boot and Spring Cloud communities
 - Netflix OSS for Eureka
@@ -507,6 +507,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Happy Fitness Tracking! 💪**
+**Happy Fitness Tracking! **
 
 > **Note**: This project is actively maintained. For issues and questions, please check the troubleshooting section or create an issue on GitHub.
